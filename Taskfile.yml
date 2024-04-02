@@ -79,6 +79,15 @@ tasks:
     status:
       - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}}
 
+  zip:
+    desc: zip
+    run: once
+    dir: "{{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}"
+    cmds:
+      - cp -a  ../../../demo .
+      - cp -a ../../../client/out/ztf-{{.GOOS}}-{{.GOARCH}} gui
+
+
   default:
     cmds:
       - task: prepare

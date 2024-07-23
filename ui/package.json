@@ -12,8 +12,8 @@
     "@iconify-icons/codicon": "^1.2.30",
     "@iconify-icons/fluent": "^1.2.38",
     "@iconify/vue": "^3.2.1",
-    "@intlify/core-base": "^9.10.2",
-    "@vueuse/core": "^10.9.0",
+    "@intlify/core-base": "^9.13.1",
+    "@vueuse/core": "^10.11.0",
     "axios": "^0.21.4",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
@@ -24,20 +24,20 @@
     "neffos.js": "0.1.25",
     "nprogress": "^0.2.0",
     "splitpanes": "^3.1.5",
-    "vue": "^3.4.21",
+    "vue": "^3.4.33",
     "vue-final-modal": "3.4.4",
-    "vue-i18n": "^9.10.2",
-    "vue-router": "^4.3.0",
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.4.0",
     "vue-toast-notification": "^3.1.2",
     "vue-toastification": "2.0.0-rc.5",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.30",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.11",
+    "@vitejs/plugin-vue": "^5.0.5",
     "less": "^4.2.0",
-    "typescript": "^5.4.2",
-    "vite": "^5.2.0",
-    "vue-tsc": "^1.8.27"
+    "typescript": "^5.5.4",
+    "vite": "^5.3.4",
+    "vue-tsc": "^2.0.28"
   }
 }

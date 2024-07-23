@@ -4,7 +4,6 @@
 
 title =expect in file
 cid=0
-pid=0
 
 step 1 >>
 

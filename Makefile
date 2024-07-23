@@ -29,17 +29,15 @@ GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
-default: win64 win32 linux linux_arm64 mac
-server: server_win64 server_win32 server_linux server_linux_arm64 server_mac
+default: win64 linux linux_arm64 mac
+server: server_win64 server_linux server_linux_arm64 server_mac
 
 server_win64:       prepare compile_server_win64 copy_files_win64   zip_server_win64
-server_win32:       prepare compile_server_win32 copy_files_win32   zip_server_win32
 server_linux:       prepare compile_server_linux copy_files_linux   zip_server_linux
 server_linux_arm64: prepare compile_server_linux_arm64 copy_files_linux_arm64   zip_server_linux_arm64
 server_mac:         prepare compile_server_mac copy_files_mac   zip_server_mac
 
 win64:       prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
-win32:       prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32       copy_files_win32       zip_server_win32       zip_client_win32
 linux:       prepare compile_server_linux package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
 linux_arm64: prepare compile_server_linux_arm64 package_gui_linux_client_arm64            compile_command_linux_arm64 copy_files_linux_arm64 zip_server_linux_arm64 zip_client_linux_arm64
 mac:         prepare compile_server_mac   package_gui_mac_client                          compile_command_mac         copy_files_mac   	   zip_server_mac         zip_client_mac
@@ -77,14 +75,6 @@ compile_launcher_win64:
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
 		cd ..
 
-compile_launcher_win32:
-	@echo 'start compile win32 launcher'
-	@cd cmd/launcher && \
-        GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v \
-		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}-gui.exe && \
-        cd ..
-
 # server
 compile_server_win64:
 	@echo 'start compile server win64'
@@ -92,13 +82,6 @@ compile_server_win64:
 	@GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${SERVER_MAIN_FILE}
-
-compile_server_win32:
-	@echo 'start compile server win32'
-	@rm -rf ${COMMAND_BIN_DIR}win32/${PROJECT}-server.exe
-	@GOOS=windows GOARCH=386 \
-		${BUILD_CMD_WIN} -x -v \
-		-o ${COMMAND_BIN_DIR}win32/${PROJECT}-server.exe ${SERVER_MAIN_FILE}
 
 compile_server_linux:
 	@echo 'start compile server linux'
@@ -133,18 +116,9 @@ package_gui_win64_client:
 	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}win32
 	@cp -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${CLIENT_BIN_DIR}win32/${PROJECT}.exe
 
-	@cd client && npm run package-win64 && cd ..
+	@cd client && npm run package-windows-amd64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win64 && mkdir -p ${CLIENT_OUT_DIR}win64 && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-win32-x64 ${CLIENT_OUT_DIR}win64/gui
-
-package_gui_win32_client:
-	@echo 'start package gui win32'
-	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}win32
-	@cp -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${CLIENT_BIN_DIR}win32/${PROJECT}.exe
-
-	@cd client && npm run package-win32 && cd ..
-	@rm -rf ${CLIENT_OUT_DIR}win32 && mkdir -p ${CLIENT_OUT_DIR}win32 && \
-		mv ${CLIENT_OUT_DIR}${PROJECT}-win32-ia32 ${CLIENT_OUT_DIR}win32/gui
 
 package_gui_linux_client:
 	@echo 'start package gui linux'
@@ -180,12 +154,6 @@ compile_command_win64:
 	@GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
-
-compile_command_win32:
-	@echo 'start compile win32'
-	@GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v \
-		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_linux:
 	@echo 'start compile linux'
@@ -224,13 +192,6 @@ copy_files_win64:
 	@cp ${COMMAND_BIN_DIR}win64/ztf.exe "${CLIENT_OUT_DIR}win64"
 	@cp ${COMMAND_BIN_DIR}win64/ztf-gui.exe "${CLIENT_OUT_DIR}win64"
 
-copy_files_win32:
-	@echo 'start copy files win32'
-	@cp -r demo "${CLIENT_OUT_DIR}win32"
-	@cp -r demo "${COMMAND_BIN_DIR}win32"
-	@cp ${COMMAND_BIN_DIR}win32/ztf.exe "${CLIENT_OUT_DIR}win32"
-	@cp ${COMMAND_BIN_DIR}win32/ztf-gui.exe "${CLIENT_OUT_DIR}win32"
-
 copy_files_linux:
 	@echo 'start copy files linux'
 	@cp -r demo "${CLIENT_OUT_DIR}linux"
@@ -256,12 +217,6 @@ zip_server_win64:
 	@cd ${COMMAND_BIN_DIR}win64 && zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
 	@md5sum ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip.md5
-
-zip_server_win32:
-	@mkdir -p ${QINIU_DIST_DIR}win32
-	@cd ${COMMAND_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
-	@md5sum ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip | awk '{print $$1}' | \
-			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip.md5
 
 zip_server_linux:
 	@mkdir -p ${QINIU_DIST_DIR}linux
@@ -290,16 +245,6 @@ zip_client_win64:
 		zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}win64/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}.zip.md5 && \
-        cd ../..; \
-
-zip_client_win32:
-	@echo 'start zip win32'
-	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}win32 && rm -rf ${QINIU_DIST_DIR}win32/${PROJECT}.zip
-	@cd ${CLIENT_OUT_DIR}win32 && \
-		zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}.zip ./* && \
-		md5sum ${QINIU_DIST_DIR}win32/${PROJECT}.zip | awk '{print $$1}' | \
-			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}.zip.md5 && \
         cd ../..; \
 
 zip_client_linux:

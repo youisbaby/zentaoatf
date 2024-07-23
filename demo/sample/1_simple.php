@@ -4,7 +4,6 @@
 
 title = simple demo
 cid=1
-pid=1
 
 step1 >> expect 1
 step2 >>

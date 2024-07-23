@@ -4,7 +4,6 @@
 
 title=Use Zentao SDK to do interface testing
 cid=0
-pid=0
 
 1. check first product name >> `.+`
 

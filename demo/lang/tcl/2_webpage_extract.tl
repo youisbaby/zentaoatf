@@ -3,7 +3,6 @@ set case {
 
 title=extract content from webpage
 cid=0
-pid=0
 
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html

@@ -2,7 +2,6 @@
 --[[
 title=check string matches pattern
 cid=0
-pid=0
 
 [group]
   1. exactly match >> hello

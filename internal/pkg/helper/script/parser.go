@@ -50,7 +50,7 @@ func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title strin
 
 	comments := strings.TrimSpace(getScriptComments(content, lang))
 	index := 0
-	groupName := 1
+	groupId := 1
 	itemName := 1
 	titleLineStart := false
 	lines := strings.Split(comments, "\n")
@@ -85,12 +85,12 @@ func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title strin
 
 		step.Type = commConsts.Group
 		if isChild {
-			step.Type = commConsts.Item
-			step.Name = fmt.Sprintf("%d.%d", groupName-1, itemName)
+			step.Type = commConsts.Step
+			step.ID = fmt.Sprintf("%d.%d", groupId-1, itemName)
 			itemName += 1
 		} else {
-			step.Name = fmt.Sprintf("%d", groupName)
-			groupName += 1
+			step.ID = fmt.Sprintf("%d", groupId)
+			groupId += 1
 			itemName = 1
 		}
 
@@ -364,7 +364,7 @@ func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, step
 		for _, child := range group.Children {
 			stepChild := commDomain.ZentaoCaseStep{}
 
-			stepChild.Type = commConsts.Item
+			stepChild.Type = commConsts.Step
 
 			stepTxt := strings.TrimSpace(child.Desc)
 			stepChild.Desc = stepTxt

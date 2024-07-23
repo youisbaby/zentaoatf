@@ -4,7 +4,6 @@
 
 title=use ztf to run selenium test
 cid=0
-pid=0
 
 1. check webpage title >> 禅道_百度搜索
 

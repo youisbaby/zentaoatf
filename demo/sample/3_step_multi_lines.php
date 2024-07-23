@@ -4,7 +4,6 @@
 
 title=step multi lines
 cid=3
-pid=1
 
 steps
   step 1.1 >>

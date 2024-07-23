@@ -3,8 +3,7 @@
 '''
 
 title=check string matches pattern
-cid=1
-pid=1
+cid=0
 
 1. exactly match            >> hello
 2. regular expression match >> `1\d{10}`

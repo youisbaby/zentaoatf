@@ -2,7 +2,6 @@
 /**
 title=check remote interface response
 cid=0
-pid=0
 
 1. Send a request to interface http://xxx
 2. Retrieve sessionID field from response json

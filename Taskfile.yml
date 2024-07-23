@@ -49,7 +49,7 @@ tasks:
     run: once
     deps:
       - install
-      - compile_ui
+      # - compile_ui
     cmds:
       - go-bindata -o=res/res.go -pkg=res res/...
     status:
@@ -75,7 +75,7 @@ tasks:
     desc: Build the CLI
     # run: once
     cmds:
-      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}} cmd/command/main.go
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o /tmp/ztf{{if eq .GOOS "windows"}}.exe{{end}} cmd/command/main.go
     # status:
     #   - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}}
 
@@ -109,5 +109,10 @@ tasks:
       - task: build_cli
         vars: {
           GOOS: linux,
+          GOARCH: amd64
+        }
+      - task: build_cli
+        vars: {
+          GOOS: windows,
           GOARCH: amd64
         }

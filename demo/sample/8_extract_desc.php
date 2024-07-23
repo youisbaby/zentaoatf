@@ -5,7 +5,6 @@
 
 title=sync step from comments
 cid=0
-pid=0
 
 1 >> expect 1
 

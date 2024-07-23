@@ -107,9 +107,9 @@ func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", config.CaseId), nil, constTestHelper.ZentaoSiteUrl)
 
 	steps := []commDomain.ZentaoCaseStep{
-		{Type: commConsts.Item, Desc: "Step 1", Expect: "Expect 1"},
-		{Type: commConsts.Item, Desc: "Step 2", Expect: "Expect 1"},
-		{Type: commConsts.Item, Desc: "Step 3", Expect: "Expect 1"},
+		{Type: commConsts.Step, Desc: "Step 1", Expect: "Expect 1"},
+		{Type: commConsts.Step, Desc: "Step 2", Expect: "Expect 1"},
+		{Type: commConsts.Step, Desc: "Step 3", Expect: "Expect 1"},
 	}
 
 	title := "用例新名字" + stringUtils.NewUuid()

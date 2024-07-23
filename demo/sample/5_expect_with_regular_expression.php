@@ -4,7 +4,6 @@
 
 title=expect with regx by using backquote `
 cid=0
-pid=0
 
 mobile phone >> `^1[0-9]\d{9}$`
 email        >> `^.+@.+\..+$`

@@ -4,7 +4,6 @@
 
 title=with multi groups
 cid=2
-pid=1
 
 step 1 >> expect 1
 step 2 >> expect 2

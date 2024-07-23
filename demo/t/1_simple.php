@@ -3,7 +3,6 @@
 /**
 title=multi lines
 cid=0
-pid=0
 
 steps
   step 1.1

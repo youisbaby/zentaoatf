@@ -114,7 +114,7 @@ type CaseStepType string
 
 const (
 	Group CaseStepType = "group"
-	Item  CaseStepType = "item"
+	Step  CaseStepType = "step"
 )
 
 type ExecBy string

@@ -29,18 +29,20 @@ GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
-default: win64 linux linux_arm64 mac
-server: server_win64 server_linux server_linux_arm64 server_mac
+default: win64 linux linux_arm64 mac mac_arm64
+server: server_win64 server_linux server_linux_arm64 server_mac server_mac_arm64
 
 server_win64:       prepare compile_server_win64 copy_files_win64   zip_server_win64
 server_linux:       prepare compile_server_linux copy_files_linux   zip_server_linux
 server_linux_arm64: prepare compile_server_linux_arm64 copy_files_linux_arm64   zip_server_linux_arm64
 server_mac:         prepare compile_server_mac copy_files_mac   zip_server_mac
+server_mac_arm64:   prepare compile_server_mac_arm64 copy_files_mac_arm64 zip_server_mac_arm64
 
-win64:       prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
-linux:       prepare compile_server_linux package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
+win64:       prepare compile_server_win64       package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
+linux:       prepare compile_server_linux       package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
 linux_arm64: prepare compile_server_linux_arm64 package_gui_linux_client_arm64            compile_command_linux_arm64 copy_files_linux_arm64 zip_server_linux_arm64 zip_client_linux_arm64
-mac:         prepare compile_server_mac   package_gui_mac_client                          compile_command_mac         copy_files_mac   	   zip_server_mac         zip_client_mac
+mac:         prepare compile_server_mac         package_gui_mac_client                          compile_command_mac         copy_files_mac   	     zip_server_mac         zip_client_mac
+mac_arm64:   prepare compile_server_mac_arm64   package_gui_mac_client_arm64              compile_command_mac_arm64   copy_files_mac_arm64   zip_server_mac_arm64   zip_client_mac_arm64
 
 prepare: update_version prepare_res
 update_version: update_version_in_config gen_version_file
@@ -58,7 +60,7 @@ gen_version_file:
 	@echo ${VERSION} > ${QINIU_DIR}/${PROJECT}/version.txt
 
 compile_ui:
-	@cd ui && yarn build --dest ../client/ui && cd ..
+	@cd ui && yarn build && cd ..
 
 prepare_res:
 	@echo 'start prepare res'
@@ -110,6 +112,13 @@ compile_server_mac:
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${SERVER_MAIN_FILE}
 
+compile_server_mac_arm64:
+	@echo 'start compile mac arm64'
+	@rm -rf ${COMMAND_BIN_DIR}darwin_arm64/${PROJECT}-server
+	@GOOS=darwin GOARCH=arm64 \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}darwin_arm64/${PROJECT}-server ${SERVER_MAIN_FILE}
+
 # gui
 package_gui_win64_client:
 	@echo 'start package gui win64'
@@ -125,7 +134,7 @@ package_gui_linux_client:
 	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}linux
 	@cp -rf ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${CLIENT_BIN_DIR}linux/${PROJECT}
 
-	@cd client && npm run package-linux && cd ..
+	@cd client && npm run package-linux-amd64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir -p ${CLIENT_OUT_DIR}linux && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-linux-x64 ${CLIENT_OUT_DIR}linux/gui
 
@@ -143,10 +152,20 @@ package_gui_mac_client:
 	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}darwin
 	@cp -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${CLIENT_BIN_DIR}darwin/${PROJECT}
 
-	@cd client && npm install && npm run package-mac && cd ..
+	@cd client && npm install && npm run package-darwin-amd64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir -p ${CLIENT_OUT_DIR}darwin && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-x64 ${CLIENT_OUT_DIR}darwin/gui && \
 		mv ${CLIENT_OUT_DIR}darwin/gui/ztf.app ${CLIENT_OUT_DIR}darwin/ztf.app && rm -rf ${CLIENT_OUT_DIR}darwin/gui
+
+package_gui_mac_client_arm64:
+	@echo 'start package gui mac arm64'
+	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}darwin_arm64
+	@cp -rf ${COMMAND_BIN_DIR}darwin_arm64/${PROJECT}-server ${CLIENT_BIN_DIR}darwin_arm64/${PROJECT}
+
+	@cd client && npm install && npm run package-darwin-arm64 && cd ..
+	@rm -rf ${CLIENT_OUT_DIR}darwin_arm64 && mkdir -p ${CLIENT_OUT_DIR}darwin_arm64 && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-arm64 ${CLIENT_OUT_DIR}darwin_arm64/gui && \
+		mv ${CLIENT_OUT_DIR}darwin_arm64/gui/ztf.app ${CLIENT_OUT_DIR}darwin_arm64/ztf.app && rm -rf ${CLIENT_OUT_DIR}darwin_arm64/gui
 
 # command line
 compile_command_win64:
@@ -210,6 +229,12 @@ copy_files_mac:
 	@cp -r demo "${CLIENT_OUT_DIR}darwin"
 	@cp -r demo "${COMMAND_BIN_DIR}darwin"
 	@cp ${COMMAND_BIN_DIR}darwin/ztf "${CLIENT_OUT_DIR}darwin"
+
+copy_files_mac_arm64:
+	@echo 'start copy files darwin arm64'
+	@cp -r demo "${CLIENT_OUT_DIR}darwin_arm64"
+	@cp -r demo "${COMMAND_BIN_DIR}darwin_arm64"
+	@cp ${COMMAND_BIN_DIR}darwin_arm64/ztf "${CLIENT_OUT_DIR}darwin_arm64"
 
 # zip server
 zip_server_win64:

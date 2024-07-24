@@ -5,7 +5,6 @@ env:
   GO_VERSION: '1.22'
   TZ: Asia/Shanghai
 
-
 permissions: write-all
 
 on:
@@ -42,11 +41,12 @@ jobs:
         run: |
           npm install -g yarn
           npm install -g electron-forge
-      - name: install task
+      - name: install tools
         run: |
-          echo "install task"
+          echo "install tools"
           go install github.com/go-task/task/v3/cmd/task@latest
+          go install github.com/kevinburke/go-bindata/v4/...@latest
       - name: Run task
         run: |
           echo "Run task"
-          task
+          make default

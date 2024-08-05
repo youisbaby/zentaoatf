@@ -47,4 +47,6 @@ jobs:
           go install github.com/kevinburke/go-bindata/v4/...@latest
       - name: Release
         run: |
+          cd ui && yarn install && cd ..
+          cd client && yarn install && cd ..
           make default

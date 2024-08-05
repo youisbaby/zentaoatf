@@ -49,4 +49,5 @@ jobs:
         run: |
           cd ui && yarn install && cd ..
           cd client && yarn install && cd ..
+          make compile_ui
           make default

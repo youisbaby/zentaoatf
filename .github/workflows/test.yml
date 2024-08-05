@@ -44,9 +44,7 @@ jobs:
       - name: install tools
         run: |
           echo "install tools"
-          go install github.com/go-task/task/v3/cmd/task@latest
           go install github.com/kevinburke/go-bindata/v4/...@latest
-      - name: Run task
+      - name: Release
         run: |
-          echo "Run task"
           make default

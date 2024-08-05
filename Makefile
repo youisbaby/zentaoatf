@@ -43,7 +43,9 @@ linux_arm64: prepare compile_server_linux_arm64 package_gui_linux_client_arm64  
 mac:         prepare compile_server_mac         package_gui_mac_client                          compile_command_mac         copy_files_mac   	     zip_server_mac         zip_client_mac
 
 prepare: update_version prepare_res
-update_version: update_version_in_config gen_version_file
+# update_version: update_version_in_config gen_version_file
+update_version: gen_version_file
+
 
 update_version_in_config:
 ifeq ($(PLATFORM),"Mac")

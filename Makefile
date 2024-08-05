@@ -60,7 +60,7 @@ gen_version_file:
 	@echo ${VERSION} > ${QINIU_DIR}/${PROJECT}/version.txt
 
 compile_ui:
-	@cd ui && yarn build && cd ..
+	@cd ui && yarn install && yarn build && cd ..
 
 prepare_res:
 	@echo 'start prepare res'

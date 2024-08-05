@@ -11,15 +11,15 @@ on:
   push:
     branches:
       - '*'
-    paths:
-      - '**.go'
-      - 'go.mod'
-      - '.github/workflows/*.yml'
-  pull_request:
-    branches:
-      - "*"
-    paths:
-      - '**.go'
+    # paths:
+    #   - '**.go'
+    #   - 'go.mod'
+    #   - '.github/workflows/*.yml'
+  # pull_request:
+  #   branches:
+  #     - "*"
+  #   paths:
+  #     - '**.go'
 
 jobs:
   build:
